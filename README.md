@@ -1,4 +1,4 @@
 Programmeerproject
 ==================
 
-Programmeerproject voor de Minor programmeren.
+Programmeerproject voor de Minor programmeren. Enz.
