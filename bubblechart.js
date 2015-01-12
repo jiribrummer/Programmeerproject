@@ -21,7 +21,7 @@ var svg = d3.select("#bubblegraph").append("svg")
 
 	
 
-d3.json("flare.json", function(error, root) {
+d3.json("Data/flare.json", function(error, root) {
   var node = svg.selectAll(".node")
       .data(bubble.nodes(classes(root))
       .filter(function(d) { return !d.children; }))

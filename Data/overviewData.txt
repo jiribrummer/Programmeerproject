@@ -1,36 +1,3 @@
 ID	Jaar	Subgenre(s)	Titel	Auteur(s)
 alew001besl01	1715	blijspel / komedie	Beslikte Swaantje en drooge Fobert	Abraham Alewijn
 alew001puit01	1720	blijspel / komedie	De Puiterveensche helleveeg	Abraham Alewijn
-asse001kwak01	1692	klucht	De kwakzalver	Thomas Asselijn
-bidl001nede01	1723	sinnespel	De muitery en nederlaag van Midas	Govert Bidloo
-bred001moor01	1617	blijspel / komedie	Moortje	G.A. Bredero
-bren001goud01	1791	blijspel / komedie	De gouden bruiloft van Kloris en Roosje	Gerrit Brender à Brandis
-bren001scha01	1797	libretto	De schaaking uit het Serail	Gerrit Brender à Brandis
-cost001teeu01	1612	klucht	Boere-klucht van Teeuwis de boer, en men juffer van Grevelinckhuysen	Samuel Coster
-focq001mini02	1674	blijspel / komedie	De min in 't Lazarus-huys	Willem G. Focquenbroch
-fres003pefr01	1746	klucht	"De electriciteit; of Pefroen, met het schaeps-hoofd. Ge-electriseerd"	Albertus Frese & Christiaan Schaaf
-hare003agon01	1968	tragedie/treurspel	Agon, sulthan van Bantam	Onno Zwier Haren
-hoof001achi01	1614	tragedie/treurspel	Achilles en Polyxena	P.C. Hooft
-hoof001gran01	1615	tragedie/treurspel	Granida	P.C. Hooft
-huyd001achi01	1719	tragedie/treurspel	Achilles	Balthazar Huydecoper
-lang020chph01	1892	blijspel / komedie	Spiegel der vaderlandsche kooplieden	Pieter Langendijk
-lijn002vlug01	1785	tragedie/treurspel & liederen/liedjes	De vlugt van Eneas, of De dood van Dido	Philip Fredrik Lijnslager
-ling001ontd01	1687	blijspel / komedie	De ontdekte schyndeugd	David Lingelbach
-meij001verl01	1668	tragedie/treurspel	Verloofde koninksbruidt	Lodewijk Meyer
-noms001mich01	1780	tragedie/treurspel	Michiel Adriaansz. de Ruyter	Joannes Nomsz
-pels001verw02	1684	blijspel / komedie	De verwaande Hollandsche Franschman	Andries Pels
-plui001verl01	1678	klucht	De verliefde Lubbert	Joan Pluimer
-rivi001jeug01	1788	blijspel / komedie	De jeugdige Michiel Adriaansz. de Ruiter in de touwbaan	Simon Rivier
-rivi001vero01	1777	tragedie/treurspel	De verovering van Den Briel, of Grondlegging der Batavische vryheid	Simon Rivier
-ross006zing01	1708	blijspel / komedie	De zingende kraamer of Vermaakelyke Krispyn	Jakobus Rosseau
-scha003bela01	1737	klucht	"De belachchelyke minnaer; of de devote serenade"	Christiaan Schaaf & Albertus Frese
-stee033adag01	1754	tragedie/treurspel	Ada, gravin van Holland en Zeeland	Frans Steenwijk
-stee033beon01	1768	tragedie/treurspel	Beon, koning van Egipte	Frans Steenwijk
-stee033tham01	1745	tragedie/treurspel	Thamas Koelikan, of de verovering van het Mogolsche rijk	Frans Steenwijk
-vinc001pefr02	1669	klucht	Pefroen met het schaapshoofd	Ysbrand Vincent
-vond001gysb04	1637	tragedie/treurspel	Gysbreght van Aemstel	Joost Vondel
-vond001jose05	1640	tragedie/treurspel	Joseph in Dothan	Joost Vondel
-vond001pala01	1625	tragedie/treurspel	Palamedes oft Vermoorde onnooselheyd	Joost Vondel
-vos_001kluc04	1660	klucht	Klucht van de Mof	Isaak Vos
-vos_002kluc01	1642	klucht	Klucht van Oene	Jan Vos
-weye002holl01	1713	blijspel / komedie	De Hollandsche sinnelykheid	Jacob Campo Weyerman
