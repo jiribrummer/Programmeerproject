@@ -36,9 +36,28 @@ var svg = d3.select("#linegraph").append("svg")
 
 
 
-
-d3.tsv("data.tsv", function(error, data) {
+d3.tsv("overviewData.txt", function(error, overviewdata) {
+	console.log('Hier1')
+  overviewdata.forEach(function(o) {
+	  
+	  d3.tsv("testdata.txt", function(error, data) {
+	console.log('Hier')
   data.forEach(function(d) {
+	  if (o[0] == d[0]) {
+		  console.log('yesyes')
+	  }
+  })
+	  })
+	  
+  });
+})
+
+	  
+	  
+d3.tsv("testdata.txt", function(error, data) {
+	console.log('Hier')
+  data.forEach(function(d) {
+	  console.log(data[0])
     d.date = parseDate(d.date);
     d.close = +d.close;
   });
