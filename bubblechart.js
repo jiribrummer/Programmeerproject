@@ -56,4 +56,6 @@ function classes(root) {
 }
 
 d3.select(self.frameElement).style("height", diameter + "px");
+
 }
+
