@@ -1,4 +1,4 @@
-id	emo-label	emo-level	tag
+id	emolabel	emolevel	tag
 alew001besl01_01.TEI.2.text.body.div.div.lg.1227.s.1	Blijdschap	Emotie	bly
 alew001besl01_01.TEI.2.text.body.div.div.lg.1227.s.1	Blijdschap	Lichaamsdeel	gemoed
 alew001besl01_01.TEI.2.text.body.div.div.lg.1227.s.3	Liefde	Emotie	liefd

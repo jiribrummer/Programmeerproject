@@ -2,7 +2,7 @@
 
 
 
-// copied from d3 website to test
+// copied from d3 website to test (not functional yet)
 
 var margin = {top: 20, right: 20, bottom: 30, left: 50},
     width = 960 - margin.left - margin.right,
@@ -33,38 +33,55 @@ var svg = d3.select("#linegraph").append("svg")
     .attr("height", height + margin.top + margin.bottom)
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+// End of copied code.
 
 
 
-d3.tsv("Data/overviewData.txt", function(error, overviewdata) {
-	overviewdata.forEach(function(d) {
-		d.ID = + d.ID	;
-		console.log(d.ID);
-    	d.Jaar = +d.Jaar;
+// Load in data and run main function
+
+console.log('start');
+
+queue()
+    .defer(d3.tsv, 'Data/overviewData.txt') // 
+    .defer(d3.tsv, 'Data/testdata.txt') // 
+    .await(main); // 
 
 
+// Main function
+function main(error, overviewdata, testdata) {
+	
+	console.log('1');
+	console.log(overviewdata);
+	console.log('2');
+	console.log(testdata);
+	console.log('3');
+	calculateEmotions(overviewdata, testdata);
+	console.log('4');
 	  
-  });
-  console.log('nu');
-console.log(overviewdata[1]);
-console.log('nu2');
-})
+}
 
 
-	  
-//	  d3.tsv("Data/testdata.txt", function(error, data) {
-//	console.log('Hier');
-//  data.forEach(function(d) {
-//	  	console.log(d.id);
-//		console.log(d.id.substr(0,12));
-//		  console.log(o.id);
-//		  console.log('check');
-
-  //})
-	//  })
-
+// Calculate frequency of emotions to plot
+function calculateEmotions(overviewdata, testdata) {
+	console.log('in calcEm');
+	testdata.forEach(function(d) {
+		//console.log('in forEach');
+		//console.log(d.emolabel)
+		if(d.emolabel == 'Blijdschap') {
+			//console.log('in if');
+			console.log(d.id)
+		}
+		});
+	console.log('End calcEm');
+}
 	  
 	  
+	  
+	  
+	  
+	  
+	  
+// Copied code from d3 site. Not functional yet.	  
 d3.tsv("Data/testdata.txt", function(error, data) {
 	console.log('Hier')
   data.forEach(function(d) {
