@@ -43,32 +43,37 @@ queue()
 	.defer(d3.tsv, 'Data/emolabels.txt') // 
     .await(main); // 
 
+function prepareData(overviewdata) {
+	overviewdata.forEach(function(d) {
+		d.aantal = +d.aantal;
+		d.jaar = +d.jaar;	
+})};
+
+function createEmptyJson(overviewdata) {
+	var data = []
+	overviewdata.forEach(function(d) {
+		data.push({'jaar' : d.jaar, 'aantal' : 0})
+	})
+	return data
+}
+
+
 
 // Main function
 function main(error, overviewdata, testdata, emolabels) {
-	overviewdata.forEach(function(d) {
-		d.aantal = +d.aantal;
-		console.log(d.jaar)
-		d.jaar = +d.jaar;
-	});
 	
-	console.log('1');
-	console.log(overviewdata);
-	console.log('2');
-	console.log(testdata);
-	console.log('3');
-	console.log(overviewdata);
-	console.log('3,5');
+	prepareData(overviewdata)
+	//console.log(createEmptyJson(overviewdata, 'Blijdschap'))
+	console.log("============")
 	
-	calculateEmotions(overviewdata, testdata, 'Woede', 'Lichaamsdeel');
+	totalEmotions = countTotalEmotions(overviewdata, testdata, 'Lichaamsdeel')
+	console.log(totalEmotions)
+	specEmotion = countSpecifiedEmotion(overviewdata, testdata, 'Angst', 'Lichaamsdeel');
 	
-	console.log('4');
-	console.log(overviewdata);
-	console.log('5');
+	plotdata = calculateRelativeFrequency(specEmotion, totalEmotions)
 
-  	
-	x.domain(d3.extent(overviewdata, function(d) { return d.jaar; }));
-	y.domain(d3.extent(overviewdata, function(d) { return d.aantal; }));
+	x.domain(d3.extent(plotdata, function(d) { return d.jaar; }));
+	y.domain(d3.extent(plotdata, function(d) { return d.aantal; }));
 
   svg.append("g")
       .attr("class", "x axis")
@@ -89,48 +94,93 @@ function main(error, overviewdata, testdata, emolabels) {
       .attr("y", 6)
       .attr("dy", ".71em")
       .style("text-anchor", "end")
-      .text("Frequency");
+      .text("Frequency (%)");
 
   svg.append("path")
-      .datum(overviewdata)
+      .datum(plotdata)
       .attr("class", "line")
       .attr("d", line);
 	  
-	  
+	  console.log(overviewdata)
+	  console.log('finish')
 }
-
-
-// Create variables
-function createVariables(emolabels) {
-	
-}
-
-	
 
 // Calculate frequency of emotions to plot
-function calculateEmotions(overviewdata, testdata, emolabel, emolevel) {
-	console.log('in calcEm');
+function countSpecifiedEmotion(overviewdata, testdata, emolabel, emolevel) {
+	console.log('----==============--------------')
+	jsondata = createEmptyJson(overviewdata)
+	console.log(jsondata)
 	testdata.forEach(function(d) {
 		//console.log('in forEach');
 		//console.log(d.emolabel)
 		if(d.emolabel == emolabel && d.emolevel == emolevel) {
+			
 			//console.log('in if');
+			//console.log(jsondata)
 			//console.log(d.id.substr(0,13))
 			//console.log('check')
 			overviewdata.forEach(function(e) {
 				//console.log(e.id)
 				if(e.id == d.id.substr(0,13)) {
 					//console.log('------------')
-					//console.log(e.aantal)
-					//console.log(e)
-					e.aantal = e.aantal + 1
-					//console.log(e.aantal)
-					//console.log(e)
-					//console.log(overviewdata)
-					//console.log('============')
+					for (var key in jsondata) {
+						//console.log(jsondata[key].jaar)
+						if (jsondata[key].jaar == e.jaar) {
+							jsondata[key].aantal = jsondata[key].aantal + 1
+						}
+					}
 				}})
 		}
 		});
-	//console.log(overviewdata);
-	//console.log('End calcEm');
+	console.log(overviewdata);
+	console.log(jsondata);
+	console.log('End calcEm');
+	return jsondata
+}
+
+function countTotalEmotions(overviewdata, testdata, emolevel) {
+	console.log('----=====++++=======--------------')
+	jsondata = createEmptyJson(overviewdata)
+	console.log(jsondata)
+	testdata.forEach(function(d) {
+		//console.log('in forEach');
+		//console.log(d.emolabel)
+		if(d.emolevel == emolevel) {
+			
+			console.log('in if');
+			console.log(jsondata)
+			//console.log(d.id.substr(0,13))
+			//console.log('check')
+			overviewdata.forEach(function(e) {
+				//console.log(e.id)
+				if(e.id == d.id.substr(0,13)) {
+					console.log('------------')
+					for (var key in jsondata) {
+						//console.log(jsondata[key].jaar)
+						if (jsondata[key].jaar == e.jaar) {
+							jsondata[key].aantal = jsondata[key].aantal + 1
+						}
+					}
+				}})
+		}
+		});
+	console.log(overviewdata);
+	console.log(jsondata);
+	console.log('End calcEm');
+	return jsondata
+}
+
+function calculateRelativeFrequency(specifiedEmotion, totalEmotion) {
+	
+	for (var i in specifiedEmotion) {
+		console.log('=-=-=-=-=-=-=-=-=')
+		console.log(specifiedEmotion[i].aantal)
+		console.log(totalEmotion[i].aantal)
+		if (specifiedEmotion[i].aantal != 0) {
+			specifiedEmotion[i].aantal = (specifiedEmotion[i].aantal / totalEmotion[i].aantal * 100)
+		}
+		console.log(specifiedEmotion[i].aantal)
+		console.log('=-=-=-=-=-=-=-=-=')
+	}
+	return specifiedEmotion
 }
