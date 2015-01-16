@@ -32,5 +32,3 @@ lijn002vlug01	1785	0	tragedie/treurspel & liederen/liedjes	De vlugt van Eneas, o
 rivi001jeug01	1788	0	blijspel / komedie	De jeugdige Michiel Adriaansz. de Ruiter in de touwbaan	Simon Rivier
 bren001goud01	1791	0	blijspel / komedie	De gouden bruiloft van Kloris en Roosje	Gerrit Brender à Brandis
 bren001scha01	1797	0	libretto	De schaaking uit het Serail	Gerrit Brender à Brandis
-lang020chph01	1892	0	blijspel / komedie	Spiegel der vaderlandsche kooplieden	Pieter Langendijk
-hare003agon01	1968	0	tragedie/treurspel	Agon, sulthan van Bantam	Onno Zwier Haren
