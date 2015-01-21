@@ -150,7 +150,6 @@ function calculateEmotions(overviewdata, alldata, emolabels, emolevel) {
 
 // Function to determine the domain to plot
 function determineDomain(plotdata, emolabels) {
-	
 		// Set first emotion data as x-domain
 		var xDomain = d3.extent(plotdata[emolabels[0].emolabels], function(e) { return e.jaar; })
 
@@ -313,7 +312,7 @@ function main(error, overviewdata, alldata, emolabels) {
 
 // copied from d3 site to test
 
-var diameter = 360,
+var diameter = 560,
     format = d3.format(",d")
 
 var bubble = d3.layout.pack()
@@ -324,41 +323,45 @@ var bubble = d3.layout.pack()
 window.onload = function() {
 
 var svg = d3.select("#bubblegraph").append("svg")
-    .attr("width", diameter)
+    .attr("width", 2*diameter)
     .attr("height", diameter)
     .attr("class", "bubble");
 
 
-	
-
-d3.json("Data/flare.json", function(error, root) {
-  var node = svg.selectAll(".node")
-  console.log(node)
-  console.log(root)
+	console.log('start1')
+	root = createBubblecloudData([1746], plotdata, emolabels)
+	console.log(root)
+	console.log(plotdata)
+var node = svg.selectAll(".node")
       .data(bubble.nodes(classes(root))
-      .filter(function(d) { return !d.children; }))
+      .filter(function(d) {  return !d.children; }))
     .enter().append("g")
       .attr("class", "node")
       .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
-
+	
+	console.log(node)
   node.append("title")
       .text(function(d) { return d.className + ": " + format(d.value); });
 
   node.append("circle")
       .attr("r", function(d) { return d.r; })
-      .style("fill", function(d) { return color(d.packageName); });
+      .style("fill", function(d, i) {console.log(d.className); return color(i); })
 
   node.append("text")
       .attr("dy", ".3em")
       .style("text-anchor", "middle")
       .text(function(d) { return d.className.substring(0, d.r / 3); });
-});
+	  console.log('Finish1')	
+;
+
+
 
 // Returns a flattened hierarchy containing all leaf nodes under the root.
 function classes(root) {
   var classes = [];
 
   function recurse(name, node) {
+	  console.log(node)
     if (node.children) node.children.forEach(function(child) { recurse(node.name, child); });
     else classes.push({packageName: name, className: node.name, value: node.size});
   }
@@ -370,5 +373,30 @@ function classes(root) {
 d3.select(self.frameElement).style("height", diameter + "px");
 
 
+
+
 }
+}
+
+function calculateBubbleData(years, plotdata, emotion){
+	var number = 0
+	years.forEach(function(y) {
+		console.log(y)
+		plotdata[emotion].forEach(function(d) {
+			if(d.jaar == y){
+				number += d.aantal
+				console.log(number)}
+		})
+	})
+	return number/years.length
+}
+
+function createBubblecloudData(years, plotdata, emolabels) {
+	var jsonData = {name: "Data", children: []}
+	emolabels.forEach(function(d) { console.log(d)
+		number = calculateBubbleData(years, plotdata, d.emolabels)
+		jsonData.children.push({name:d.emolabels, size: Math.round(number * 100) / 100})
+	})
+	console.log(jsonData)
+	return jsonData
 }
