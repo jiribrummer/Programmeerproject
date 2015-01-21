@@ -74,7 +74,6 @@
     return a;
   };
   d3.extent = function(array, f) {
-	  console.log(array)
     var i = -1, n = array.length, a, b, c;
     if (arguments.length === 1) {
       while (++i < n) if ((b = array[i]) != null && b >= b) {
@@ -95,7 +94,6 @@
         if (c < b) c = b;
       }
     }
-	console.log(a,c)
     return [ a, c ];
   };
   function d3_number(x) {
