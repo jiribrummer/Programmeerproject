@@ -25,6 +25,8 @@ var line = d3.svg.line()
     .x(function(d) { return x(d.jaar); })
     .y(function(d) { return y(d.aantal); });
 	
+var activeLines = []
+	
 // Place SVG object in created Div
 var svg = d3.select("#linegraph").append("svg")
     .attr("width", width + margin.left + margin.right)
@@ -63,7 +65,7 @@ function addToJson(overviewdata, varname, dataToAdd) {
 }
 
 // Function to plot line 
-function plotLine(plotdata, d, i) {
+function plotLine(plotdata, d, i, alldata) {
 
 	// Add line
 	svg.append("path")
@@ -99,11 +101,16 @@ function plotLine(plotdata, d, i) {
 		// Function when clicked on text
         .on("click", function(){	
 			
+			console.log(plotdata)
+			
 			var active   = d.active ? false : true,
+			
+
             newOpacityLine = active ? 0.4 : 0; // Line becomes visible when active 
 			newOpacityCircle = active ? 1 : 0;  // Dots become visible when active
 			newWeight = active ? 'bold' : 'normal';
 			newDecoration = active ? 'underline' : 'none';
+			//activeLines = active ? activeLines.push(d[emolabels]) : activeLines.push(d[emolabels]);
 			
             // Hide or show the elements based on the ID
             d3.select("#tag"+d.emolabels.replace(/\s+/g, ''))
@@ -119,6 +126,21 @@ function plotLine(plotdata, d, i) {
 
             // Update whether or not the elements are active
             d.active = active;
+			console.log(d.active);
+			if(d.active) {
+				console.log('nu actief')
+				console.log(activeLines)
+				activeLines.push(d['emolabels'])
+				console.log(activeLines)
+			}
+			else {
+				activeLines.splice(activeLines.indexOf(d['emolabels']),1)
+			}
+			determineDomain2(alldata,activeLines)
+			console.log(y.domain)
+			d3.select("#y-axis")
+            .transition().duration(1000)
+			.call(yAxis)
             //updategraph()
 			});
        
@@ -151,6 +173,8 @@ function calculateEmotions(overviewdata, alldata, emolabels, emolevel) {
 // Function to determine the domain to plot
 function determineDomain(plotdata, emolabels) {
 		// Set first emotion data as x-domain
+		console.log(emolabels[0])
+		console.log(plotdata)
 		var xDomain = d3.extent(plotdata[emolabels[0].emolabels], function(e) { return e.jaar; })
 
 		// Loop over all emotions
@@ -192,6 +216,56 @@ function determineDomain(plotdata, emolabels) {
 		// Set y-domain
 		y.domain(yDomain);
 }
+
+
+// Function to determine the domain to plot
+function determineDomain2(plotdata, emolabels) {
+		// Set first emotion data as x-domain
+		console.log(emolabels[0])
+		console.log(plotdata)
+		var xDomain = d3.extent(plotdata[emolabels[0]], function(e) { return e.jaar; })
+
+		// Loop over all emotions
+		emolabels.forEach(function(d) {
+			
+			// Store min and max
+			var tempDomain = d3.extent(plotdata[d], function(e) { return e.jaar; })
+			
+			// Check if domain needs to be changed. If so, do
+			if(tempDomain[0] < xDomain[0]){
+				xDomain[0] = tempDomain[0]
+			}
+			if(tempDomain[1] > xDomain[1]){
+				xDomain[1] = tempDomain[1]
+			}			
+		})
+		
+		// Set x-domain
+		x.domain(xDomain);
+		
+		// Set first emotion data as y-domain
+		var yDomain = d3.extent(plotdata[emolabels[0]], function(e) { return e.aantal; })
+
+		// Loop over all emotions
+		emolabels.forEach(function(d) {
+			
+			// Store min and max
+			var tempDomain = d3.extent(plotdata[d], function(e) { return e.aantal; })
+
+			// Check if domain needs to be changed. If so, do
+			if(tempDomain[0] < yDomain[0]){
+				yDomain[0] = tempDomain[0]
+			}
+			if(tempDomain[1] > yDomain[1]){
+				yDomain[1] = tempDomain[1]
+			}			
+		})
+		
+		// Set y-domain
+		y.domain(yDomain);
+}
+
+
 
 // Count frequency of specified emotion
 function countSpecifiedEmotion(overviewdata, alldata, emolabel, emolevel, dataToAdd) {
@@ -280,7 +354,7 @@ function main(error, overviewdata, alldata, emolabels) {
 	
 	// Plot all emotions
 	emolabels.forEach(function(d,i) { 
-		plotLine(plotdata[d.emolabels], d, i)
+		plotLine(plotdata[d.emolabels], d, i, plotdata)
 	})
 
 	// Set up axes
@@ -297,6 +371,7 @@ function main(error, overviewdata, alldata, emolabels) {
 	
 	svg.append("g")
       .attr("class", "y axis")
+	  .attr("id", "y-axis")
       .call(yAxis)
     .append("text")
       .attr("transform", "rotate(-90)")
@@ -322,8 +397,8 @@ var bubble = d3.layout.pack()
 
 window.onload = function() {
 
-var svg = d3.select("#bubblegraph").append("svg")
-    .attr("width", 2*diameter)
+var svg = d3.select("#bubblegraph1").append("svg")
+    .attr("width", diameter)
     .attr("height", diameter)
     .attr("class", "bubble");
 
@@ -341,19 +416,52 @@ var node = svg.selectAll(".node")
 	
 	console.log(node)
   node.append("title")
-      .text(function(d) { return d.className + ": " + format(d.value); });
+      .text(function(d) {console.log(d); return d.className + ": " + d.value; });
 
   node.append("circle")
       .attr("r", function(d) { return d.r; })
       .style("fill", function(d, i) {console.log(d.className); return color(i); })
+	  .on("click", function(d){console.log(d)})
 
   node.append("text")
       .attr("dy", ".3em")
       .style("text-anchor", "middle")
-      .text(function(d) { return d.className.substring(0, d.r / 3); });
+      .text(function(d) { return (d.className + ": " + d.value).substring(0, d.r / 3); });
 	  console.log('Finish1')	
 ;
 
+var svg = d3.select("#bubblegraph2").append("svg")
+    .attr("width", diameter)
+    .attr("height", diameter)
+    .attr("class", "bubble");
+
+
+	console.log('start1')
+	root = createBubblecloudData([1754], plotdata, emolabels)
+	console.log(root)
+	console.log(plotdata)
+var node = svg.selectAll(".node")
+      .data(bubble.nodes(classes(root))
+      .filter(function(d) {  return !d.children; }))
+    .enter().append("g")
+      .attr("class", "node")
+      .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+	
+	console.log(node)
+  node.append("title")
+      .text(function(d) {console.log(d); return d.className + ": " + d.value; });
+
+  node.append("circle")
+      .attr("r", function(d) { return d.r; })
+      .style("fill", function(d, i) {console.log(d.className); return color(i); })
+	  .on("click", function(d){console.log(d)})
+
+  node.append("text")
+      .attr("dy", ".3em")
+      .style("text-anchor", "middle")
+      .text(function(d) { return (d.className + ": " + d.value).substring(0, d.r / 3); });
+	  console.log('Finish1')	
+;
 
 
 // Returns a flattened hierarchy containing all leaf nodes under the root.
@@ -372,7 +480,9 @@ function classes(root) {
 
 d3.select(self.frameElement).style("height", diameter + "px");
 
+console.log(emolabels)
 
+createWordcloud(createWords(emolabels))
 
 
 }
@@ -399,4 +509,45 @@ function createBubblecloudData(years, plotdata, emolabels) {
 	})
 	console.log(jsonData)
 	return jsonData
+}
+
+function createWords(input) {
+	words = []
+	input.forEach(function(d) {words.push(d['emolabels'])})
+	console.log(words)
+	return words
+}
+
+
+function createWordcloud(words) {
+	console.log(words)
+  d3.layout.cloud().size([560, 560])
+      .words(words.map(function(d) {
+        return {text: d, size: 20};
+      }))
+      .padding(1)
+      .rotate(function() { return ~~(Math.random()  * 120 - 60); })
+      .font("Impact")
+      .fontSize(function(d) { return d.size; })
+      .on("end", draw)
+      .start();
+
+  function draw(words) {
+    d3.select("#wordcloud1").append("svg")
+        .attr("width", 560)
+        .attr("height", 560)
+      .append("g")
+        .attr("transform", "translate(280,280)") 
+      .selectAll("text")
+        .data(words)
+      .enter().append("text")
+        .style("font-size", function(d) { return d.size + "px"; })
+        .style("font-family", "Impact")
+        .style("fill", function(d, i) { return color(i); })
+        .attr("text-anchor", "middle")
+        .attr("transform", function(d) {
+          return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+        })
+        .text(function(d) { return d.text; });
+  }
 }
