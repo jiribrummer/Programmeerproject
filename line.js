@@ -404,8 +404,8 @@ var svg = d3.select("#bubblegraph1").append("svg")
 
 
 	console.log('start1')
-	var years = [1746]
-	root = createBubblecloudData(years, plotdata, emolabels)
+	var years1 = [1746]
+	root = createBubblecloudData(years1, plotdata, emolabels)
 	console.log(root)
 	console.log(plotdata)
 var node = svg.selectAll(".node")
@@ -425,7 +425,9 @@ var node = svg.selectAll(".node")
 	  .on("click", function(d, i){
 		  console.log(d.className)
 		  console.log(color(i))
-		var inputwords = createWords2(overviewdata, alldata, years, d.className)
+		  console.log('wc1')
+		  console.log(years1)
+		var inputwords = createWords2(overviewdata, alldata, years1, d.className)
 		console.log(inputwords)
 		createWordcloud(inputwords, color(i), "#wordcloud1")  
 	  })
@@ -442,9 +444,9 @@ var svg = d3.select("#bubblegraph2").append("svg")
     .attr("height", diameter)
     .attr("class", "bubble");
 
-	years = [1754]
+	years2 = [1754]
 	console.log('start1')
-	root = createBubblecloudData(years, plotdata, emolabels)
+	root = createBubblecloudData(years2, plotdata, emolabels)
 	console.log(root)
 	console.log(plotdata)
 	console.log
@@ -463,8 +465,10 @@ var node = svg.selectAll(".node")
       .attr("r", function(d) { return d.r; })
       .style("fill", function(d, i) {console.log(d.className); return color(i); })
 	  .on("click", function(d, i){
-		var inputwords = createWords2(overviewdata, alldata, years, d.className)
+		var inputwords = createWords2(overviewdata, alldata, years2, d.className)
 		console.log(inputwords)
+		console.log('wc2')
+		console.log(years2)
 		createWordcloud(inputwords, color(i), "#wordcloud2")  
 	  })
 
