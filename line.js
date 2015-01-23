@@ -404,7 +404,8 @@ var svg = d3.select("#bubblegraph1").append("svg")
 
 
 	console.log('start1')
-	root = createBubblecloudData([1746], plotdata, emolabels)
+	var years = [1746]
+	root = createBubblecloudData(years, plotdata, emolabels)
 	console.log(root)
 	console.log(plotdata)
 var node = svg.selectAll(".node")
@@ -421,7 +422,13 @@ var node = svg.selectAll(".node")
   node.append("circle")
       .attr("r", function(d) { return d.r; })
       .style("fill", function(d, i) {console.log(d.className); return color(i); })
-	  .on("click", function(d){console.log(d)})
+	  .on("click", function(d, i){
+		  console.log(d.className)
+		  console.log(color(i))
+		var inputwords = createWords2(overviewdata, alldata, years, d.className)
+		console.log(inputwords)
+		createWordcloud(inputwords, color(i), "#wordcloud1")  
+	  })
 
   node.append("text")
       .attr("dy", ".3em")
@@ -435,11 +442,12 @@ var svg = d3.select("#bubblegraph2").append("svg")
     .attr("height", diameter)
     .attr("class", "bubble");
 
-
+	years = [1754]
 	console.log('start1')
-	root = createBubblecloudData([1754], plotdata, emolabels)
+	root = createBubblecloudData(years, plotdata, emolabels)
 	console.log(root)
 	console.log(plotdata)
+	console.log
 var node = svg.selectAll(".node")
       .data(bubble.nodes(classes(root))
       .filter(function(d) {  return !d.children; }))
@@ -454,7 +462,11 @@ var node = svg.selectAll(".node")
   node.append("circle")
       .attr("r", function(d) { return d.r; })
       .style("fill", function(d, i) {console.log(d.className); return color(i); })
-	  .on("click", function(d){console.log(d)})
+	  .on("click", function(d, i){
+		var inputwords = createWords2(overviewdata, alldata, years, d.className)
+		console.log(inputwords)
+		createWordcloud(inputwords, color(i), "#wordcloud2")  
+	  })
 
   node.append("text")
       .attr("dy", ".3em")
@@ -480,13 +492,16 @@ function classes(root) {
 
 d3.select(self.frameElement).style("height", diameter + "px");
 
-console.log(emolabels)
 
-createWordcloud(createWords(emolabels))
 
+
+
+console.log('klaarnu')
 
 }
 }
+
+
 
 function calculateBubbleData(years, plotdata, emotion){
 	var number = 0
@@ -519,8 +534,10 @@ function createWords(input) {
 }
 
 
-function createWordcloud(words) {
-	console.log(words)
+function createWordcloud(words, emocolor, id) {
+
+
+
   d3.layout.cloud().size([560, 560])
       .words(words.map(function(d) {
         return {text: d, size: 20};
@@ -533,7 +550,8 @@ function createWordcloud(words) {
       .start();
 
   function draw(words) {
-    d3.select("#wordcloud1").append("svg")
+	d3.select(id).selectAll("svg").remove()  
+    d3.select(id).append("svg")
         .attr("width", 560)
         .attr("height", 560)
       .append("g")
@@ -543,11 +561,39 @@ function createWordcloud(words) {
       .enter().append("text")
         .style("font-size", function(d) { return d.size + "px"; })
         .style("font-family", "Impact")
-        .style("fill", function(d, i) { return color(i); })
+        .style("fill", emocolor)
         .attr("text-anchor", "middle")
         .attr("transform", function(d) {
           return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
         })
         .text(function(d) { return d.text; });
   }
+}
+
+
+
+
+
+function createWords2(overviewdata, alldata, years, emotion){
+	inputwords = []
+	console.log(years)
+	console.log(overviewdata)
+	console.log(alldata)
+	years.forEach(function(d){
+		//console.log(d)
+		//console.log(overviewdata)
+		overviewdata.forEach(function(e){
+			if(d==e.jaar) {
+				//console.log(e.id)
+				alldata.forEach(function(f){
+					if(e.id == f.id.substr(0,13) && emotion == f.emolabel){
+						//console.log(f.tag)
+						inputwords.push(f.tag)
+					}
+				})
+			}
+		})
+	})
+	console.log(inputwords)
+	return inputwords
 }
