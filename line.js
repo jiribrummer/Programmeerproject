@@ -113,6 +113,7 @@ function plotLine(plotdata, d, i, alldata) {
 			//activeLines = active ? activeLines.push(d[emolabels]) : activeLines.push(d[emolabels]);
 			
             // Hide or show the elements based on the ID
+			console.log(d.emolabels)
             d3.select("#tag"+d.emolabels.replace(/\s+/g, ''))
                 .transition().duration(100)
                 .style("opacity", newOpacityLine);
@@ -139,8 +140,16 @@ function plotLine(plotdata, d, i, alldata) {
 			determineDomain2(alldata,activeLines)
 			console.log(y.domain)
 			d3.select("#y-axis")
-            .transition().duration(1000)
+            .transition().duration(100)
 			.call(yAxis)
+			activeLines.forEach(function(i){
+				console.log(i);
+            	d3.select("#tag"+i.replace(/\s+/g, ''))
+				.attr('d', line)
+				d3.selectAll('#tag2'+i.replace(/\s+/g, ''))
+				.attr("cy", function(d) { return y(d.aantal); });
+			})
+
             //updategraph()
 			});
        
@@ -435,7 +444,16 @@ var node = svg.selectAll(".node")
   node.append("text")
       .attr("dy", ".3em")
       .style("text-anchor", "middle")
-      .text(function(d) { return (d.className + ": " + d.value).substring(0, d.r / 3); });
+      .text(function(d) { return (d.className + ": " + d.value).substring(0, d.r / 3); })
+	  .on("click", function(d, i){
+		  console.log(d.className)
+		  console.log(color(i))
+		  console.log('wc1')
+		  console.log(years1)
+		var inputwords = createWords2(overviewdata, alldata, years1, d.className)
+		console.log(inputwords)
+		createWordcloud(inputwords, color(i), "#wordcloud1") ;
+	  })
 	  console.log('Finish1')	
 ;
 
@@ -547,7 +565,7 @@ function createWordcloud(words, emocolor, id) {
         return {text: d, size: 20};
       }))
       .padding(1)
-      .rotate(function() { return ~~(Math.random()  * 120 - 60); })
+      .rotate(function() { return ~~(Math.random()  * 20 - 10); })
       .font("Impact")
       .fontSize(function(d) { return d.size; })
       .on("end", draw)
