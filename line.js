@@ -1,8 +1,31 @@
-// JavaScript Document
+// ============================================
+// Name				Jiri Brummer
+// Student number	10277897
+// Course			Programmeerproject
+
+// University		University of Amsterdam
+// ============================================
 
 
-// Set up variables
+// =========================
+// Global variables
+// =========================
 
+// Set up color range. Data from http://bl.ocks.org/DStruths/9c042e3a6b66048b5bd4	
+var color = d3.scale.ordinal().range(["#48A36D",  "#56AE7C",  "#64B98C", "#72C39B", "#80CEAA", "#80CCB3", "#7FC9BD", "#7FC7C6", "#7EC4CF", "#7FBBCF", "#7FB1CF", "#80A8CE", "#809ECE", "#8897CE", "#8F90CD", "#9788CD", "#9E81CC", "#AA81C5", "#B681BE", "#C280B7", "#CE80B0", "#D3779F", "#D76D8F", "#DC647E", "#E05A6D", "#E16167", "#E26962", "#E2705C", "#E37756", "#E38457", "#E39158", "#E29D58", "#E2AA59", "#E0B15B", "#DFB95C", "#DDC05E", "#DBC75F", "#E3CF6D", "#EAD67C", "#F2DE8A"]);  
+
+
+
+
+
+
+// =========================
+// Line graph
+// =========================
+
+function lineGraph(overviewdata, alldata, emolabels) {
+
+// Set up variables for line graph
 var margin = {top: 20, right: 250, bottom: 70, left: 50},
     width = 1150 - margin.left - margin.right,
     height = 600 - margin.top - margin.bottom;
@@ -33,40 +56,45 @@ var svg = d3.select("#linegraph").append("svg")
     .attr("height", height + margin.top + margin.bottom)
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-// Set up color range. Data from http://bl.ocks.org/DStruths/9c042e3a6b66048b5bd4	
-var color = d3.scale.ordinal().range(["#48A36D",  "#56AE7C",  "#64B98C", "#72C39B", "#80CEAA", "#80CCB3", "#7FC9BD", "#7FC7C6", "#7EC4CF", "#7FBBCF", "#7FB1CF", "#80A8CE", "#809ECE", "#8897CE", "#8F90CD", "#9788CD", "#9E81CC", "#AA81C5", "#B681BE", "#C280B7", "#CE80B0", "#D3779F", "#D76D8F", "#DC647E", "#E05A6D", "#E16167", "#E26962", "#E2705C", "#E37756", "#E38457", "#E39158", "#E29D58", "#E2AA59", "#E0B15B", "#DFB95C", "#DDC05E", "#DBC75F", "#E3CF6D", "#EAD67C", "#F2DE8A"]);  
-
-
-// Load data and run main function
-
-
-// Load data en wait to execute main function until all data is loaded
-queue()
-    .defer(d3.tsv, 'Data/overviewData_big.txt') // Data with background information
-    .defer(d3.tsv, 'Data/alldata_big.txt') // Data of all texts
-	.defer(d3.tsv, 'Data/emolabels.txt') // All emotion labels
-    .await(main); // Wait for all data sets to be loaded to execute main function
-
-// Shape overview data in correct format
-function prepareData(overviewdata) {
-	console.log(overviewdata)
-	overviewdata.forEach(function(d) {
-		d.aantal = +d.aantal; // Make integers of string
-		d.jaar = +d.jaar;	// Make integers of string
-})};
-
-// Function to create a json file with the name of a given emotion
-function addToJson(overviewdata, varname, dataToAdd) {
-		dataToAdd[varname] = [] // Add name of given emotion
-	overviewdata.forEach(function(d) {
-		dataToAdd[varname].push({'jaar' : d.jaar, 'aantal' : 0}) // Set all counts 0 for every year
+	//console.log(overviewdata)
+	prepareData(overviewdata)
+	var labels = emolabels
+	//console.log(emolabels)
+	calculateEmotions(overviewdata, alldata, labels, 'Emotie')
+	determineDomain(plotdata, emolabels, x, y)
+	
+	// Plot all emotions
+	emolabels.forEach(function(d,i) { 
+		plotLine(plotdata[d.emolabels], d, i, plotdata, svg, line, x, y, activeLines, yAxis)
 	})
-	return dataToAdd
+
+	// Set up axes
+	svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis);
+	svg.append("text")
+      .attr("y", 560)
+	  .attr("x", 910)
+      .attr("dy", ".71em")
+      .style("text-anchor", "end")
+      .text("Year");
+	
+	svg.append("g")
+      .attr("class", "y axis")
+	  .attr("id", "y-axis")
+      .call(yAxis)
+    .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 6)
+      .attr("dy", ".71em")
+      .style("text-anchor", "end")
+      .text("Frequency (%)");
+	
 }
 
 // Function to plot line 
-function plotLine(plotdata, d, i, alldata) {
+function plotLine(plotdata, d, i, alldata, svg, line, x, y, activeLines, yAxis) {
 
 	// Add line
 	svg.append("path")
@@ -102,7 +130,7 @@ function plotLine(plotdata, d, i, alldata) {
 		// Function when clicked on text
         .on("click", function(){	
 			
-			console.log(plotdata)
+			//console.log(plotdata)
 			
 			var active   = d.active ? false : true,
 			
@@ -114,7 +142,7 @@ function plotLine(plotdata, d, i, alldata) {
 			//activeLines = active ? activeLines.push(d[emolabels]) : activeLines.push(d[emolabels]);
 			
             // Hide or show the elements based on the ID
-			console.log(d.emolabels)
+			//console.log(d.emolabels)
             d3.select("#tag"+d.emolabels.replace(/\s+/g, ''))
                 .transition().duration(100)
                 .style("opacity", newOpacityLine);
@@ -130,16 +158,16 @@ function plotLine(plotdata, d, i, alldata) {
             d.active = active;
 			console.log(d.active);
 			if(d.active) {
-				console.log('nu actief')
-				console.log(activeLines)
+				//console.log('nu actief')
+				//console.log(activeLines)
 				activeLines.push(d['emolabels'])
-				console.log(activeLines)
+				//console.log(activeLines)
 			}
 			else {
 				activeLines.splice(activeLines.indexOf(d['emolabels']),1)
 			}
-			determineDomain2(alldata,activeLines)
-			console.log(y.domain)
+			determineDomain2(alldata,activeLines, x, y)
+			//console.log(y.domain)
 			d3.select("#y-axis")
             .transition().duration(100)
 			.call(yAxis)
@@ -156,15 +184,35 @@ function plotLine(plotdata, d, i, alldata) {
        
 }
 
-// ==================
-// Still working on
-// ==================
-function updategraph() {
-	console.log('werkt')
-	d3.selectAll(".line")[0].forEach(function(d) {
-		console.log('nummer')
+
+
+	
+
+	
+	
+	
+
+
+
+
+// Shape overview data in correct format
+function prepareData(overviewdata) {
+	console.log(overviewdata)
+	overviewdata.forEach(function(d) {
+		d.aantal = +d.aantal; // Make integers of string
+		d.jaar = +d.jaar;	// Make integers of string
+})};
+
+// Function to create a json file with the name of a given emotion
+function addToJson(overviewdata, varname, dataToAdd) {
+		dataToAdd[varname] = [] // Add name of given emotion
+	overviewdata.forEach(function(d) {
+		dataToAdd[varname].push({'jaar' : d.jaar, 'aantal' : 0}) // Set all counts 0 for every year
 	})
+	return dataToAdd
 }
+
+
   
 // Calculates relative frequency of all emotions
 function calculateEmotions(overviewdata, alldata, emolabels, emolevel) {
@@ -181,10 +229,10 @@ function calculateEmotions(overviewdata, alldata, emolabels, emolevel) {
 }
 
 // Function to determine the domain to plot
-function determineDomain(plotdata, emolabels) {
+function determineDomain(plotdata, emolabels, x, y) {
 		// Set first emotion data as x-domain
-		console.log(emolabels[0])
-		console.log(plotdata)
+		//console.log(emolabels[0])
+		//console.log(plotdata)
 		var xDomain = d3.extent(plotdata[emolabels[0].emolabels], function(e) { return e.jaar; })
 
 		// Loop over all emotions
@@ -229,10 +277,10 @@ function determineDomain(plotdata, emolabels) {
 
 
 // Function to determine the domain to plot
-function determineDomain2(plotdata, emolabels) {
+function determineDomain2(plotdata, emolabels, x, y) {
 		// Set first emotion data as x-domain
-		console.log(emolabels[0])
-		console.log(plotdata)
+		//console.log(emolabels[0])
+		//console.log(plotdata)
 		var xDomain = d3.extent(plotdata[emolabels[0]], function(e) { return e.jaar; })
 
 		// Loop over all emotions
@@ -354,49 +402,104 @@ function calculateRelativeFrequency(specifiedEmotion, totalEmotion, labels) {
 }
 
 
-// Main function
-function main(error, overviewdata, alldata, emolabels) {
-	console.log(overviewdata)
-	prepareData(overviewdata)
-	var labels = emolabels
-	calculateEmotions(overviewdata, alldata, labels, 'Emotie')
-	determineDomain(plotdata, emolabels)
-	
-	// Plot all emotions
-	emolabels.forEach(function(d,i) { 
-		plotLine(plotdata[d.emolabels], d, i, plotdata)
+// =============================
+// Burshes for bubble cloud
+// =============================
+
+function createBrush(overviewdata, alldata, emolabels, id) {
+//console.log('restart')
+//console.log(overviewdata)
+	var data = []
+
+	overviewdata.forEach(function(d) {
+		data.push(d.jaar)
 	})
 
-	// Set up axes
-	svg.append("g")
-      .attr("class", "x axis")
-      .attr("transform", "translate(0," + height + ")")
-      .call(xAxis);
-	svg.append("text")
-      .attr("y", 560)
-	  .attr("x", 910)
-      .attr("dy", ".71em")
-      .style("text-anchor", "end")
-      .text("Year");
+//console.log(data)
+
+
+var margin = {top: 20, right: 50, bottom: 20, left: 50},
+    width = 560 - margin.left - margin.right,
+    height = 100 - margin.top - margin.bottom;
+
+var x = d3.scale.linear()
+    .range([0, width])
+	.domain(d3.extent(data));
 	
-	svg.append("g")
-      .attr("class", "y axis")
-	  .attr("id", "y-axis")
-      .call(yAxis)
-    .append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 6)
-      .attr("dy", ".71em")
-      .style("text-anchor", "end")
-      .text("Frequency (%)");
+
+var brush = d3.svg.brush()
+    .x(x)
+    .extent([.3, .5])
+    .on("brushstart", brushstart)
+    .on("brush", brushmove)
+    .on("brushend", brushend);
+
+var svg = d3.select(id).append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+svg.append("g")
+    .attr("class", "x axis")
+    .attr("transform", "translate(0," + height/2 + ")")
+    .call(d3.svg.axis().scale(x).orient("bottom"));
+
+var circle = svg.append("g").selectAll("circle")
+    .data(data)
+  .enter().append("circle")
+    .attr("transform", function(d) { return "translate(" + x(d) + "," + height / 2 + ")"; })
+	.attr("id", function(d) {return d})
+    .attr("r", 3.5);
+
+var brushg = svg.append("g")
+    .attr("class", "brush")
+    .call(brush);
+	
+brushg.selectAll(".resize")
+	.style('stroke', 1)
+	.style('fill', "#666")
+	.style('visibility', 'visible');
 
 
+brushg.selectAll("rect")
+    .attr("height", height);
+	//.style('visibility', 'visible')
+	
+//console.log(data)
+
+brushstart();
+brushmove();
+
+function brushstart() {
+  svg.classed("selecting", true);
+}
+
+function brushmove() {
+  var s = brush.extent();
+  circle.classed("selected", function(d) { return s[0] <= d && d <= s[1]; });
+}
+
+function brushend() {
+  svg.classed("selecting", !d3.event.target.empty());  
+  var itemlist = [];
+  var selected_elements = svg.selectAll(".selected")[0];
+  selected_elements.forEach(function(d) {console.log(d.id); itemlist.push(d.id)}); 
+  console.log(id);
+  bubbleClouds(emolabels, overviewdata, alldata, id.substring(0, 13) , itemlist)
+  d3.select(id.substring(0, 13) + "Wordcloud").selectAll("svg").remove()
+
+	}
+
+}
+
+// ============================
+// Bubbleclouds
+// ============================
 
 
-//=================================
-
-// copied from d3 site to test
-
+function bubbleClouds(emolabels, overviewdata, alldata, id, years) {
+console.log(id)
 var diameter = 560,
     format = d3.format(",d")
 
@@ -405,17 +508,17 @@ var bubble = d3.layout.pack()
     .size([diameter, diameter])
     .padding(1.5);
 
-window.onload = function() {
+d3.select(id).selectAll("svg").remove()  
 
-var svg = d3.select("#bubblegraph1").append("svg")
+var svg = d3.select(id).append("svg")
     .attr("width", diameter)
     .attr("height", diameter)
     .attr("class", "bubble");
 
-
 	console.log('start1')
-	var years1 = [1746]
-	root = createBubblecloudData(years1, plotdata, emolabels)
+	console.log(plotdata)
+	console.log(years)
+	root = createBubblecloudData(years, plotdata, emolabels)
 	console.log(root)
 	console.log(plotdata)
 var node = svg.selectAll(".node")
@@ -436,10 +539,11 @@ var node = svg.selectAll(".node")
 		  console.log(d.className)
 		  console.log(color(i))
 		  console.log('wc1')
-		  console.log(years1)
-		var inputwords = createWords2(overviewdata, alldata, years1, d.className)
+		var inputwords = createWords2(overviewdata, alldata, years, d.className)
 		console.log(inputwords)
-		createWordcloud(inputwords, color(i), "#wordcloud1")  
+		console.log(id)
+		console.log(id.substring(1,13) + "_wordcloud")
+		createWordcloud(inputwords, overviewdata, color(i), "#" + id.substring(1,13) + "Wordcloud")  
 	  })
 
   node.append("text")
@@ -450,54 +554,13 @@ var node = svg.selectAll(".node")
 		  console.log(d.className)
 		  console.log(color(i))
 		  console.log('wc1')
-		  console.log(years1)
-		var inputwords = createWords2(overviewdata, alldata, years1, d.className)
+		  console.log(years)
+		var inputwords = createWords2(overviewdata, alldata, years, d.className)
 		console.log(inputwords)
-		createWordcloud(inputwords, color(i), "#wordcloud1") ;
+		createWordcloud(inputwords, overviewdata, color(i), "#" + id.substring(1,13) + "Wordcloud") ;
 	  })
 	  console.log('Finish1')	
 ;
-
-var svg = d3.select("#bubblegraph2").append("svg")
-    .attr("width", diameter)
-    .attr("height", diameter)
-    .attr("class", "bubble");
-
-	years2 = [1754]
-	console.log('start1')
-	root = createBubblecloudData(years2, plotdata, emolabels)
-	console.log(root)
-	console.log(plotdata)
-	console.log
-var node = svg.selectAll(".node")
-      .data(bubble.nodes(classes(root))
-      .filter(function(d) {  return !d.children; }))
-    .enter().append("g")
-      .attr("class", "node")
-      .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
-	
-	console.log(node)
-  node.append("title")
-      .text(function(d) {return d.className + ": " + d.value; });
-
-  node.append("circle")
-      .attr("r", function(d) { return d.r; })
-      .style("fill", function(d, i) {return color(i); })
-	  .on("click", function(d, i){
-		var inputwords = createWords2(overviewdata, alldata, years2, d.className)
-		console.log(inputwords)
-		console.log('wc2')
-		console.log(years2)
-		createWordcloud(inputwords, color(i), "#wordcloud2")  
-	  })
-
-  node.append("text")
-      .attr("dy", ".3em")
-      .style("text-anchor", "middle")
-      .text(function(d) { return (d.className + ": " + d.value).substring(0, d.r / 3); });
-	  console.log('Finish1')	
-;
-
 
 // Returns a flattened hierarchy containing all leaf nodes under the root.
 function classes(root) {
@@ -521,12 +584,10 @@ d3.select(self.frameElement).style("height", diameter + "px");
 
 console.log('klaarnu')
 
-createbrush(overviewdata)
-
-}
 }
 
 
+// =================================
 
 function calculateBubbleData(years, plotdata, emotion){
 	var number = 0
@@ -560,10 +621,10 @@ function createWords(input) {
 }
 
 
-function createWordcloud(words, emocolor, id) {
+function createWordcloud(words, overviewdata, emocolor, id) {
 
 
-
+	console.log(id)
   d3.layout.cloud().size([560, 560])
       .words(words.map(function(d) {
         return {text: d, size: 20};
@@ -576,6 +637,7 @@ function createWordcloud(words, emocolor, id) {
       .start();
 
   function draw(words) {
+	  console.log(id)
 	d3.select(id).selectAll("svg").remove()  
     d3.select(id).append("svg")
         .attr("width", 560)
@@ -626,95 +688,34 @@ function createWords2(overviewdata, alldata, years, emotion){
 
 
 
-// =============================
-// Burshes for bubble cloud
-// =============================
-
-console.log('newstart')
-function createbrush(overviewdata) {
-console.log('restart')
-console.log(overviewdata)
-var data = []
-
-overviewdata.forEach(function(d) {
-	data.push(d.jaar)
-})
-
-console.log(data)
 
 
-var margin = {top: 20, right: 50, bottom: 20, left: 50},
-    width = 560 - margin.left - margin.right,
-    height = 100 - margin.top - margin.bottom;
 
-var x = d3.scale.linear()
-    .range([0, width])
-	.domain(d3.extent(data));
+
+
+
+
+
+
+
+// =========================
+// Main functions
+// =========================
+
+// Load data en wait to execute main function until all data is loaded
+queue()
+    .defer(d3.tsv, 'Data/overviewData_big.txt') // Data with background information
+    .defer(d3.tsv, 'Data/alldata_big.txt') // Data of all texts
+	.defer(d3.tsv, 'Data/emolabels.txt') // All emotion labels
+    .await(main); // Wait for all data sets to be loaded to execute main function
+
+// Main function
+function main(error, overviewdata, alldata, emolabels) {
 	
-console.log(x.range)
-
-
-var brush = d3.svg.brush()
-    .x(x)
-    .extent([.3, .5])
-    .on("brushstart", brushstart)
-    .on("brush", brushmove)
-    .on("brushend", brushend);
-
-var svg = d3.select("#bubblegraph1_brush").append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-  .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-svg.append("g")
-    .attr("class", "x axis")
-    .attr("transform", "translate(0," + height/2 + ")")
-    .call(d3.svg.axis().scale(x).orient("bottom"));
-
-var circle = svg.append("g").selectAll("circle")
-    .data(data)
-  .enter().append("circle")
-    .attr("transform", function(d) { return "translate(" + x(d) + "," + height / 2 + ")"; })
-	.attr("id", function(d) {return d})
-    .attr("r", 3.5);
-
-var brushg = svg.append("g")
-    .attr("class", "brush")
-    .call(brush);
-	
-brushg.selectAll(".resize")
-	.style('stroke', 1)
-	.style('fill', "#666")
-	.style('visibility', 'visible');
-
-
-brushg.selectAll("rect")
-    .attr("height", height);
-	//.style('visibility', 'visible')
-	
-console.log(data)
-
-brushstart();
-brushmove();
-
-function brushstart() {
-  svg.classed("selecting", true);
-}
-
-function brushmove() {
-  var s = brush.extent();
-  circle.classed("selected", function(d) { return s[0] <= d && d <= s[1]; });
-}
-
-function brushend() {
-  svg.classed("selecting", !d3.event.target.empty());
-  console.log('1');
-  
-  console.log(svg.selectAll(".selected"))
-  //.forEach(function(d){console.log(d#)})
-  console.log('2');
-
-}
+	lineGraph(overviewdata, alldata, emolabels)
+	createBrush(overviewdata, alldata, emolabels, '#bubblegraph1_brush')
+	createBrush(overviewdata, alldata, emolabels, '#bubblegraph2_brush')
+	bubbleClouds(emolabels, overviewdata, alldata, "#bubblegraph1", [1745, 1746])
+	bubbleClouds(emolabels, overviewdata, alldata, "#bubblegraph2", [1754, 1777])
 
 }
