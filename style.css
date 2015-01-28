@@ -35,3 +35,30 @@ body {
 #bubblegraph {
 
 }
+
+
+
+// brush for bubblegraph
+
+circle {
+  -webkit-transition: fill-opacity 250ms linear;
+}
+
+.selecting circle {
+  fill-opacity: .9;
+}
+
+.selecting circle.selected {
+  stroke: #f00;
+}
+
+.axis path, .axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.brush .extent {
+  fill-opacity: .125;
+  shape-rendering: crispEdges;
+}

@@ -1,0 +1,28 @@
+id	jaar	aantal	subgenres	titel	auteurs
+hoof001achi01	1614	0	tragedie/treurspel	Achilles en Polyxena	P.C. Hooft
+hoof001gran01	1615	0	tragedie/treurspel	Granida	P.C. Hooft
+bred001moor01	1617	0	blijspel / komedie	Moortje	G.A. Bredero
+vond001pala01	1625	0	tragedie/treurspel	Palamedes oft Vermoorde onnooselheyd	Joost Vondel
+vond001gysb04	1637	0	tragedie/treurspel	Gysbreght van Aemstel	Joost Vondel
+vond001jose05	1640	0	tragedie/treurspel	Joseph in Dothan	Joost Vondel
+vos_002kluc01	1642	0	klucht	Klucht van Oene	Jan Vos
+meij001verl01	1668	0	tragedie/treurspel	Verloofde koninksbruidt	Lodewijk Meyer
+vinc001pefr02	1669	0	klucht	Pefroen met het schaapshoofd	Ysbrand Vincent
+focq001mini02	1674	0	blijspel / komedie	De min in 't Lazarus-huys	Willem G. Focquenbroch
+pels001verw02	1684	0	blijspel / komedie	De verwaande Hollandsche Franschman	Andries Pels
+ling001ontd01	1687	0	blijspel / komedie	De ontdekte schyndeugd	David Lingelbach
+ross006zing01	1708	0	blijspel / komedie	De zingende kraamer of Vermaakelyke Krispyn	Jakobus Rosseau
+weye002holl01	1713	0	blijspel / komedie	De Hollandsche sinnelykheid	Jacob Campo Weyerman
+alew001besl01	1715	0	blijspel / komedie	Beslikte Swaantje en drooge Fobert	Abraham Alewijn
+huyd001achi01	1719	0	tragedie/treurspel	Achilles	Balthazar Huydecoper
+alew001puit01	1720	0	blijspel / komedie	De Puiterveensche helleveeg	Abraham Alewijn
+bidl001nede01	1723	0	sinnespel	De muitery en nederlaag van Midas	Govert Bidloo
+stee033tham01	1745	0	tragedie/treurspel	Thamas Koelikan, of de verovering van het Mogolsche rijk	Frans Steenwijk
+fres003pefr01	1746	0	klucht	"De electriciteit; of Pefroen, met het schaeps-hoofd. Ge-electriseerd"	Albertus Frese & Christiaan Schaaf
+stee033adag01	1754	0	tragedie/treurspel	Ada, gravin van Holland en Zeeland	Frans Steenwijk
+rivi001vero01	1777	0	tragedie/treurspel	De verovering van Den Briel, of Grondlegging der Batavische vryheid	Simon Rivier
+noms001mich01	1780	0	tragedie/treurspel	Michiel Adriaansz. de Ruyter	Joannes Nomsz
+lijn002vlug01	1785	0	tragedie/treurspel & liederen/liedjes	De vlugt van Eneas, of De dood van Dido	Philip Fredrik Lijnslager
+rivi001jeug01	1788	0	blijspel / komedie	De jeugdige Michiel Adriaansz. de Ruiter in de touwbaan	Simon Rivier
+bren001goud01	1791	0	blijspel / komedie	De gouden bruiloft van Kloris en Roosje	Gerrit Brender à Brandis
+bren001scha01	1797	0	libretto	De schaaking uit het Serail	Gerrit Brender à Brandis

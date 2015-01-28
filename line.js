@@ -43,13 +43,14 @@ var color = d3.scale.ordinal().range(["#48A36D",  "#56AE7C",  "#64B98C", "#72C39
 
 // Load data en wait to execute main function until all data is loaded
 queue()
-    .defer(d3.tsv, 'Data/overviewData.txt') // Data with background information
-    .defer(d3.tsv, 'Data/alldata.txt') // Data of all texts
+    .defer(d3.tsv, 'Data/overviewData_big.txt') // Data with background information
+    .defer(d3.tsv, 'Data/alldata_big.txt') // Data of all texts
 	.defer(d3.tsv, 'Data/emolabels.txt') // All emotion labels
     .await(main); // Wait for all data sets to be loaded to execute main function
 
 // Shape overview data in correct format
 function prepareData(overviewdata) {
+	console.log(overviewdata)
 	overviewdata.forEach(function(d) {
 		d.aantal = +d.aantal; // Make integers of string
 		d.jaar = +d.jaar;	// Make integers of string
@@ -355,7 +356,7 @@ function calculateRelativeFrequency(specifiedEmotion, totalEmotion, labels) {
 
 // Main function
 function main(error, overviewdata, alldata, emolabels) {
-
+	console.log(overviewdata)
 	prepareData(overviewdata)
 	var labels = emolabels
 	calculateEmotions(overviewdata, alldata, labels, 'Emotie')
@@ -426,11 +427,11 @@ var node = svg.selectAll(".node")
 	
 	console.log(node)
   node.append("title")
-      .text(function(d) {console.log(d); return d.className + ": " + d.value; });
+      .text(function(d) {return d.className + ": " + d.value; });
 
   node.append("circle")
       .attr("r", function(d) { return d.r; })
-      .style("fill", function(d, i) {console.log(d.className); return color(i); })
+      .style("fill", function(d, i) {return color(i); })
 	  .on("click", function(d, i){
 		  console.log(d.className)
 		  console.log(color(i))
@@ -477,11 +478,11 @@ var node = svg.selectAll(".node")
 	
 	console.log(node)
   node.append("title")
-      .text(function(d) {console.log(d); return d.className + ": " + d.value; });
+      .text(function(d) {return d.className + ": " + d.value; });
 
   node.append("circle")
       .attr("r", function(d) { return d.r; })
-      .style("fill", function(d, i) {console.log(d.className); return color(i); })
+      .style("fill", function(d, i) {return color(i); })
 	  .on("click", function(d, i){
 		var inputwords = createWords2(overviewdata, alldata, years2, d.className)
 		console.log(inputwords)
@@ -503,7 +504,7 @@ function classes(root) {
   var classes = [];
 
   function recurse(name, node) {
-	  console.log(node)
+	  //console.log(node)
     if (node.children) node.children.forEach(function(child) { recurse(node.name, child); });
     else classes.push({packageName: name, className: node.name, value: node.size});
   }
@@ -520,6 +521,8 @@ d3.select(self.frameElement).style("height", diameter + "px");
 
 console.log('klaarnu')
 
+createbrush(overviewdata)
+
 }
 }
 
@@ -528,11 +531,12 @@ console.log('klaarnu')
 function calculateBubbleData(years, plotdata, emotion){
 	var number = 0
 	years.forEach(function(y) {
-		console.log(y)
+		//console.log(y)
 		plotdata[emotion].forEach(function(d) {
 			if(d.jaar == y){
 				number += d.aantal
-				console.log(number)}
+				//console.log(number)
+				}
 		})
 	})
 	return number/years.length
@@ -540,7 +544,7 @@ function calculateBubbleData(years, plotdata, emotion){
 
 function createBubblecloudData(years, plotdata, emolabels) {
 	var jsonData = {name: "Data", children: []}
-	emolabels.forEach(function(d) { console.log(d)
+	emolabels.forEach(function(d) {
 		number = calculateBubbleData(years, plotdata, d.emolabels)
 		jsonData.children.push({name:d.emolabels, size: Math.round(number * 100) / 100})
 	})
@@ -618,4 +622,99 @@ function createWords2(overviewdata, alldata, years, emotion){
 	})
 	console.log(inputwords)
 	return inputwords
+}
+
+
+
+// =============================
+// Burshes for bubble cloud
+// =============================
+
+console.log('newstart')
+function createbrush(overviewdata) {
+console.log('restart')
+console.log(overviewdata)
+var data = []
+
+overviewdata.forEach(function(d) {
+	data.push(d.jaar)
+})
+
+console.log(data)
+
+
+var margin = {top: 20, right: 50, bottom: 20, left: 50},
+    width = 560 - margin.left - margin.right,
+    height = 100 - margin.top - margin.bottom;
+
+var x = d3.scale.linear()
+    .range([0, width])
+	.domain(d3.extent(data));
+	
+console.log(x.range)
+
+
+var brush = d3.svg.brush()
+    .x(x)
+    .extent([.3, .5])
+    .on("brushstart", brushstart)
+    .on("brush", brushmove)
+    .on("brushend", brushend);
+
+var svg = d3.select("#bubblegraph1_brush").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+svg.append("g")
+    .attr("class", "x axis")
+    .attr("transform", "translate(0," + height/2 + ")")
+    .call(d3.svg.axis().scale(x).orient("bottom"));
+
+var circle = svg.append("g").selectAll("circle")
+    .data(data)
+  .enter().append("circle")
+    .attr("transform", function(d) { return "translate(" + x(d) + "," + height / 2 + ")"; })
+	.attr("id", function(d) {return d})
+    .attr("r", 3.5);
+
+var brushg = svg.append("g")
+    .attr("class", "brush")
+    .call(brush);
+	
+brushg.selectAll(".resize")
+	.style('stroke', 1)
+	.style('fill', "#666")
+	.style('visibility', 'visible');
+
+
+brushg.selectAll("rect")
+    .attr("height", height);
+	//.style('visibility', 'visible')
+	
+console.log(data)
+
+brushstart();
+brushmove();
+
+function brushstart() {
+  svg.classed("selecting", true);
+}
+
+function brushmove() {
+  var s = brush.extent();
+  circle.classed("selected", function(d) { return s[0] <= d && d <= s[1]; });
+}
+
+function brushend() {
+  svg.classed("selecting", !d3.event.target.empty());
+  console.log('1');
+  
+  console.log(svg.selectAll(".selected"))
+  //.forEach(function(d){console.log(d#)})
+  console.log('2');
+
+}
+
 }
