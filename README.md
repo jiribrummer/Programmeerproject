@@ -1,5 +1,5 @@
 Programmeerproject - Jiri Brummer
-Visualization
+Visualization of embodied emotions. 
 ==================
 
 Programmeerproject voor de Minor programmeren. Enz.
