@@ -1,3 +1,17 @@
+<!--Copyright 2015 Jiri Brummer
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.-->
+
 <!DOCTYPE HTML>
 <html>
 	<head>
@@ -22,85 +36,94 @@
             </div>
         </div>
         
-	<div id="container">
-        <div>
-        	<p class="textblockTitle">
-        		Filter for emotionlevel
-        	</p>
-            <p class="textblock">
-            	The data is also tagged on four different level: Emotie, Emotionele handeling, Lichaamsdeel, Lichaamswerking. When you click on one of these four labels, you in- or exclude the data for the rest of the visualization. For example, when you only select Lichaamdeel, you can compare the emotions only tagged with body parts in the visualizations below.
-            </p>
-            
-        </div>
-        
-        <div id="filter">
-        	<table>
-            	<tr>
-                	<td>
-                    	<p onClick="changedFilter(this.id)" id="Emotie" class="filter">Emotie</p>
-                    </td>
-                    <td>
-                    	<p onClick="changedFilter(this.id)" id="EmotioneleHandeling" class="filter">Emotionele handeling</p>
-                    </td>
-                    <td>
-                    	<p onClick="changedFilter(this.id)" id="Lichaamsdeel" class="filter">Lichaamsdeel</p>
-                    </td>
-                    <td>
-                    	<p onClick="changedFilter(this.id)" id="Lichaamswerking" class="filter">Lichaamswerking</p>
-                    </td>
-                    </tr>            
-            </table>
-        </div>
-        
-        
-        
+		<div id="container">
         	<div>
         		<p class="textblockTitle">
-        		Line graph to visualize the different emotions over time
+        			Filter for emotionlevel
         		</p>
             	<p class="textblock">
-            	Below a line graph is plotted, with the aim to visualize how different emotions have evolved over time. In the legend you can select the emotions you want to plot. If an emotion is plotted, it can be removed to click again on its name in the legend. 
+            		The data is also tagged on four different level: Emotie, Emotionele handeling, 
+                    Lichaamsdeel, Lichaamswerking. When you click on one of these four labels, you in- 
+                    or exclude the data for the rest of the visualization. For example, when you only 
+                    select Lichaamdeel, you can compare the emotions only tagged with body parts in the 
+                    visualizations below.
+            	</p>
+        	</div>
+        	<div id="filter">
+        		<table>
+            		<tr>
+                		<td>
+                    		<p onClick="changedFilter(this.id)" id="Emotie" class="filter">Emotie</p>
+                    	</td>
+                    	<td>
+                    		<p onClick="changedFilter(this.id)" id="EmotioneleHandeling" 
+                            class="filter">Emotionele handeling</p>
+                    	</td>
+                    	<td>
+                    		<p onClick="changedFilter(this.id)" id="Lichaamsdeel" 
+                            class="filter">Lichaamsdeel</p>
+                    	</td>
+                    	<td>
+                    		<p onClick="changedFilter(this.id)" id="Lichaamswerking" 
+                            class="filter">Lichaamswerking</p>
+                    	</td>
+                    </tr>            
+            	</table>
+        	</div>
+        	<div>
+        		<p class="textblockTitle">
+        			Line graph to visualize the different emotions over time
+        		</p>
+            	<p class="textblock">
+            		Below a line graph is plotted, with the aim to visualize how different 
+                    emotions have evolved over time. In the legend you can select the emotions 
+                    you want to plot. If an emotion is plotted, it can be removed to click again on 
+                    its name in the legend. 
            		</p>
        		</div>
     		<div id="linegraph"></div>
                 <div>
-        	<p class="textblockTitle">
-        		Bubble graphs to compare 2 selected time periods
-        	</p>
-            <p class="textblock">
-            	Below two bubble plots are plotted. The time lines can be used to set times ranges and the bubble plots will adjust to the selected time priods. The size of the bubbles is scaled on the relative frequency of that emotion. Moreover, as some bubble are too small to read, so you can hover on the bubble and read the emotion and relative frequency.<br><br>In addition, when you click on a bubble, below appears a wordcloud with the words tagged with that emotion.  
-            </p>
-        </div>
-    	<div id="bubblegraphcontainer">
-    		<table>
-    			<tr>
-    				<td>
-    					<div id="bubblegraph1_brush"></div>
-    				</td>
-    				<td>
-    					<div id="bubblegraph2_brush"></div>
-                    </td>
-                </tr>
-    			<tr>
-    				<td>
-    					<div id="bubblegraph1"></div>
-    				</td>
-   					<td>
-    					<div id="bubblegraph2"></div>
-    				</td>
-    			</tr>
-                <tr>
-    				<td>
-    					<div id="bubblegraph1Wordcloud"></div>
-    				</td>
-    				<td>
-    					<div id="bubblegraph2Wordcloud"></div>
-    				</td>
-    			</tr>
-            </table>
-        </div>
-    </div>
+        			<p class="textblockTitle">
+        				Bubble graphs to compare 2 selected time periods
+        			</p>
+            		<p class="textblock">
+            			Below two bubble plots are plotted. The time lines can be used to set times 
+                        ranges and the bubble plots will adjust to the selected time priods. The size
+                         of the bubbles is scaled on the relative frequency of that emotion. Moreover, 
+                         as some bubble are too small to read, so you can hover on the bubble and read the
+                          emotion and relative frequency.<br><br>In addition, when you click on a bubble, 
+                          below appears a wordcloud with the words tagged with that emotion.  
+            		</p>
+        		</div>
+    			<div id="bubblegraphcontainer">
+    				<table>
+    					<tr>
+    						<td>
+    							<div id="bubblegraph1_brush"></div>
+    						</td>
+    						<td>
+    							<div id="bubblegraph2_brush"></div>
+                    		</td>
+                		</tr>
+    					<tr>
+    						<td>
+    							<div id="bubblegraph1"></div>
+    						</td>
+   							<td>
+    							<div id="bubblegraph2"></div>
+    						</td>
+    					</tr>
+                		<tr>
+    						<td>
+    							<div id="bubblegraph1Wordcloud"></div>
+    						</td>
+    						<td>
+    							<div id="bubblegraph2Wordcloud"></div>
+    						</td>
+    					</tr>
+            		</table>
+        		</div>
+    		</div>
         <script src="Linkedfiles/visualization.js"></script>	
-        
 	</body>
 </html>
