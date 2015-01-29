@@ -489,8 +489,8 @@ function createBrush(overviewdata, alldata, emolabels, id) {
 	}
 	
 	function brushmove() {
-	  var s = brush.extent();
-	  circle.classed("selected", function(d) { return s[0] <= d && d <= s[1]; });
+	  	var s = brush.extent();
+	  	circle.classed("selected", function(d) { return s[0] <= d && d <= s[1]; });
 	}
 	
 	// After brush is move, update data for wordcloud
@@ -502,6 +502,9 @@ function createBrush(overviewdata, alldata, emolabels, id) {
 		selected_elements.forEach(function(d) {itemlist.push(d.id)}); 
 		// Update bubbleclouds
 		bubbleClouds(emolabels, overviewdata, alldata, id.substring(0, 13) , itemlist)
+		// Change text of which time is selected
+		document.getElementById(id.substring(1, 13) + "_time").innerHTML = 
+			"Selected time: " + d3.min(itemlist) + " - " + d3.max(itemlist)
 		// Remove current wordcloud, because data are changed.
 		d3.select(id.substring(0, 13) + "Wordcloud").selectAll("svg").remove()
 		}

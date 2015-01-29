@@ -84,6 +84,13 @@ a {
 	font-size:16px
 }
 
+.time {
+	text-align:center;
+	color:#800000;
+	font-size:24px;
+	font-weight:400;
+}
+
 #filter {
 	padding-left:30px;
 }
@@ -114,7 +121,6 @@ a {
 	background-color: #800000;
 }
 
-
 /* Copied from D3 brush. Made modifications */
 
 circle {
@@ -126,7 +132,7 @@ circle {
 }
 
 .selecting circle.selected {
-  stroke: #f00;
+  stroke: #800000;
 }
 
 .axis path, .axis line {
