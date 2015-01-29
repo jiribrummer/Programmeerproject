@@ -60,7 +60,7 @@ var svg = d3.select("#linegraph").append("svg")
 	prepareData(overviewdata)
 	var labels = emolabels
 	//console.log(emolabels)
-	calculateEmotions(overviewdata, alldata, labels, 'Emotie')
+	calculateEmotions(overviewdata, alldata, labels)
 	determineDomain(plotdata, emolabels, x, y)
 	
 	// Plot all emotions
@@ -215,14 +215,14 @@ function addToJson(overviewdata, varname, dataToAdd) {
 
   
 // Calculates relative frequency of all emotions
-function calculateEmotions(overviewdata, alldata, emolabels, emolevel) {
-	totalEmotions = countTotalEmotions(overviewdata, alldata, emolevel) // Counts total emotions
+function calculateEmotions(overviewdata, alldata, emolabels) {
+	totalEmotions = countTotalEmotions(overviewdata, alldata) // Counts total emotions
 	var emoData = {} // Make empty JSON data to add emotions
 	
 	// Loops over all emotions
 	emolabels.forEach(function(d,i) { 
 	
-		specEmotion = countSpecifiedEmotion(overviewdata, alldata, d.emolabels, emolevel, emoData); // Counts total of specific emotion
+		specEmotion = countSpecifiedEmotion(overviewdata, alldata, d.emolabels, emoData); // Counts total of specific emotion
 		plotdata = calculateRelativeFrequency(specEmotion, totalEmotions, d.emolabels) // Calculates frequency of specified emotion
 	})
 	return plotdata
@@ -326,7 +326,7 @@ function determineDomain2(plotdata, emolabels, x, y) {
 
 
 // Count frequency of specified emotion
-function countSpecifiedEmotion(overviewdata, alldata, emolabel, emolevel, dataToAdd) {
+function countSpecifiedEmotion(overviewdata, alldata, emolabel, dataToAdd) {
 	
 	
 	jsondata = addToJson(overviewdata, emolabel, dataToAdd)
@@ -335,7 +335,7 @@ function countSpecifiedEmotion(overviewdata, alldata, emolabel, emolevel, dataTo
 	alldata.forEach(function(d) {
 
 		// Check for specified emotion
-		if(d.emolabel == emolabel && d.emolevel == emolevel) {
+		if(d.emolabel == emolabel) {
 			
 			// Loop over overview data
 			overviewdata.forEach(function(e) {
@@ -358,7 +358,7 @@ function countSpecifiedEmotion(overviewdata, alldata, emolabel, emolevel, dataTo
 }
 
 // Function to count total of emotions
-function countTotalEmotions(overviewdata, alldata, emolevel) {
+function countTotalEmotions(overviewdata, alldata) {
 	var jsondataTotal = {}
 	
 	// Create object with counts of 0
@@ -366,8 +366,6 @@ function countTotalEmotions(overviewdata, alldata, emolevel) {
 	
 	// Loop over all data
 	alldata.forEach(function(d) {
-
-		if(d.emolevel == emolevel) {
 
 			overviewdata.forEach(function(e) {
 				
@@ -381,7 +379,7 @@ function countTotalEmotions(overviewdata, alldata, emolevel) {
 						}
 					}
 				}})
-			}
+			
 		});
 
 	return jsondataTotal
@@ -702,20 +700,88 @@ function createWords2(overviewdata, alldata, years, emotion){
 // Main functions
 // =========================
 
+function refreshAll(inputEmolevel) {
+	
+
 // Load data en wait to execute main function until all data is loaded
 queue()
     .defer(d3.tsv, 'Data/overviewData_big.txt') // Data with background information
     .defer(d3.tsv, 'Data/alldata_big.txt') // Data of all texts
 	.defer(d3.tsv, 'Data/emolabels.txt') // All emotion labels
     .await(main); // Wait for all data sets to be loaded to execute main function
+	
+function filterEmolevel(alldata, filter) {
+	filteredlist = []
+	alldata.forEach(function(d) {
+		filter.forEach(function(e) {
+				//console.log(d.emolevel)
+				//console.log(e)
+			if(d.emolevel == e) {
+				//console.log(d.emolevel)
+				//console.log(e)
+				filteredlist.push(d)
+			}
+		})
+	})
+	console.log(filteredlist)
+	return(filteredlist)
+}
+
+
+
+//var globalOverviewData = d3.tsv('Data/overviewData_big.txt')
+//var globalAllData = d3.tsv('Data/alldata_big.txt')
+//d3.tsv('Data/emolabels.txt', function(data) {var GlobalEmolabels = data})
+
+//console.log(GlobalEmolabels)
+
 
 // Main function
-function main(error, overviewdata, alldata, emolabels) {
+function main(error, overviewdata, alldata_raw, emolabels) {
 	
-	lineGraph(overviewdata, alldata, emolabels)
+	alldata = filterEmolevel(alldata_raw, inputEmolevel)
+	console.log(alldata)
+	console.log(inputEmolevel)
+	lineGraph(overviewdata, alldata, emolabels, inputEmolevel)
 	createBrush(overviewdata, alldata, emolabels, '#bubblegraph1_brush')
 	createBrush(overviewdata, alldata, emolabels, '#bubblegraph2_brush')
-	bubbleClouds(emolabels, overviewdata, alldata, "#bubblegraph1", [1745, 1746])
+	bubbleClouds(emolabels, overviewdata, alldata, "#bubblegraph1", [1746])
 	bubbleClouds(emolabels, overviewdata, alldata, "#bubblegraph2", [1754, 1777])
 
+}}
+
+function changedFilter(id) {
+	shouldAdd = "True"
+	console.log(id)
+	console.log(inputEmolevel)
+	inputEmolevel.forEach(function(d, i){
+		console.log(d)
+		console.log(id)
+		if(d == id) {
+			console.log('inif')
+			console.log(i)
+			inputEmolevel.splice(i, 1);
+			console.log(inputEmolevel)
+			shouldAdd = "False"
+			document.getElementById(id).style.fontWeight = 'normal'
+			document.getElementById(id).style.borderWidth = "0px"
+			}
+		})
+		if(shouldAdd == "True"){
+			inputEmolevel.push(id)
+			document.getElementById(id).style.fontWeight = 'bold'
+			document.getElementById(id).style.borderWidth = "3px"	
+			document.getElementById(id).style.borderColor = "#800000"
+			document.getElementById(id).style.borderStyle = "solid"		
+			}
+		console.log(inputEmolevel)
+		counter = 0
+		inputEmolevel.forEach(function(f){
+			counter += 1})
+		if(counter > 0){
+			d3.select("#linegraph").selectAll("svg").remove()
+			d3.select("#bubblegraphcontainer").selectAll("svg").remove()
+			refreshAll(inputEmolevel)}
 }
+var inputEmolevel = ["Lichaamsdeel"]
+refreshAll(inputEmolevel)

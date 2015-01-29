@@ -7,6 +7,12 @@
 
 body {
   font: 10px sans-serif;
+  margin:0;
+  padding:0;
+}
+
+a {
+	text-decoration:none;
 }
 
 .axis path,
@@ -28,14 +34,72 @@ body {
     font-size: 12px;
 } 
 
-#linegraph {
-
+.button {
+	height:100%;
+	font-size:24px;
+	text-align:center;
+	float:left;
+	margin-left:30px;
 }
 
-#bubblegraph {
-
+.button a {
+	color:#FFF;
+	text-decoration:none;
 }
 
+.button a:hover {
+	text-decoration:underline
+}
+
+.button p {
+	margin: 0;
+	padding-top:11px;
+}
+
+.textblockTitle {
+	border-bottom-color:#800000;
+	border-bottom-style: solid;
+	border-bottom-width: 3px;
+	margin: 30px;
+	font-size:36px
+}
+
+.textblock {
+	margin: 30px;
+	font-size:16px
+}
+
+#filter {
+	padding-left:30px;
+}
+
+#filter table {
+	border-color:#800000;
+	border-style: solid;
+	border-width: 3px;
+}
+
+#filter p {
+	font-size:16px;
+	margin-right:20px;
+	margin-left:20px;
+	color:#800000;
+}
+
+#Lichaamsdeel {
+	border-color:#800000;
+	border-style:solid;
+	border-width:3px;
+	font-weight: bold;
+}
+
+#container {
+}
+
+#header {
+	height:50px;
+	background-color: #800000;
+}
 
 
 // brush for bubblegraph
